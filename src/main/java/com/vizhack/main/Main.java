@@ -65,6 +65,9 @@ public class Main {
                 String dom = getTopDomain(lineArray[3]);
                 if (!domPrev.equals(dom)) {
                     db.addRelation(domPrev, dom, lineArray[0]);
+                    if(lineArray[1].equals("true")){
+                        db.addRelation(dom, lineArray[2], lineArray[0]);
+                    }
                 }
                 for (int i = 0; i < prevLineArray.length; i++) {
                     prevLineArray[i] = lineArray[i];
