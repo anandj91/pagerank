@@ -18,7 +18,7 @@ public class DBUtil {
         resource = Client.create().resource(TXN_URI);
     }
 
-    private int runQuery(String query) {
+    private ClientResponse runQuery(String query) {
         String payload = "{\"statements\" : [ {\"statement\" : \"" + query
                 + "\"} ]}";
         ClientResponse response = resource.accept(MediaType.APPLICATION_JSON)
@@ -31,31 +31,25 @@ public class DBUtil {
                                 + System.getProperty("line.separator") + "%s",
                         payload, TXN_URI, response.getStatus(),
                         response.getEntity(String.class)));
-
-        int status = response.getStatus();
-        response.close();
-        return status;
+        
+        return response;
     }
 
     public Boolean insertNode(String cookie, String domain, String time) {
-        String query = "";
         return true;
     }
 
     public Long getNode(String domain) {
-        String query = "";
-        return 1l;
+        return null;
     }
     
     public Long getLastNode(String cookie) {
-        return 1l;
+        return null;
     }
 
     public Long addRelation(long src, long dest, String cookie) {
-        String query = "";
-        return 1l;
+        return null;
     }
-
     
 
     /**
