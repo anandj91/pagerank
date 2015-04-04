@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.vizhack.graphdb.DBUtil;
 
@@ -17,7 +18,7 @@ public class Main {
         FileInputStream fis = new FileInputStream(fin);
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
         DBUtil db = new DBUtil();
-        ArrayList<String> domainCacheList = new ArrayList<String>();
+        HashSet<String> domainCacheList = new HashSet<String>();
 
         String line = null, domain = null;
         while ((line = br.readLine()) != null) {
