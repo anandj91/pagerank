@@ -36,7 +36,8 @@ public class DBUtil {
     }
 
     public Boolean insertNode(String domain) {
-        String query = String.format("create (%s:Domain)", domain);
+        String query = String.format("CREATE (%s:Domain {domain:'%s'})",
+                domain, domain);
 
         ClientResponse response = runQuery(query);
         int status = response.getStatus();
@@ -48,8 +49,8 @@ public class DBUtil {
     }
 
     public Long getNode(String domain) {
-        String query = "";
-        
+        String query = "MATCH (n) WHERE n.domain='%s' RETURN n";
+
         ClientResponse response = runQuery(query);
         int status = response.getStatus();
 
@@ -63,15 +64,29 @@ public class DBUtil {
         return null;
     }
 
-    public Long addRelation(long src, long dest, String cookie) {
+    public Long addRelation(String src, String dest, String cookie) {
         return null;
+    }
+
+    public Boolean flushDB() {
+        String query = "MATCH (n) DELETE n";
+
+        ClientResponse response = runQuery(query);
+        int status = response.getStatus();
+
+        if (status >= 200 && status < 300) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-
+        DBUtil db = new DBUtil();
+        System.out.println(db.insertNode("testdomain"));
+//        db.flushDB();
     }
 
 }
