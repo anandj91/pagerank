@@ -74,6 +74,11 @@ public class Main {
                 }
                 domPrev = dom;
             }
+            else if(!prevLineArray[0].equals(lineArray[0])){
+                for (int i = 0; i < prevLineArray.length; i++) {
+                    prevLineArray[i] = lineArray[i];
+                }
+            }
         }
 
     }
