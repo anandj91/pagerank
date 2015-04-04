@@ -31,18 +31,34 @@ public class DBUtil {
                                 + System.getProperty("line.separator") + "%s",
                         payload, TXN_URI, response.getStatus(),
                         response.getEntity(String.class)));
-        
+
         return response;
     }
 
-    public Boolean insertNode(String cookie, String domain, String time) {
-        return true;
+    public Boolean insertNode(String domain) {
+        String query = String.format("create (%s:Domain)", domain);
+
+        ClientResponse response = runQuery(query);
+        int status = response.getStatus();
+
+        if (status >= 200 && status < 300) {
+            return true;
+        }
+        return false;
     }
 
     public Long getNode(String domain) {
+        String query = "";
+        
+        ClientResponse response = runQuery(query);
+        int status = response.getStatus();
+
+        if (status >= 200 && status < 300) {
+            return null;
+        }
         return null;
     }
-    
+
     public Long getLastNode(String cookie) {
         return null;
     }
@@ -50,7 +66,6 @@ public class DBUtil {
     public Long addRelation(long src, long dest, String cookie) {
         return null;
     }
-    
 
     /**
      * @param args
