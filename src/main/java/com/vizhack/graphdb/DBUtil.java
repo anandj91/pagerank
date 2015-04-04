@@ -37,23 +37,23 @@ public class DBUtil {
         return status;
     }
 
-    public boolean insertNode(String cookie, String domain, String time) {
+    public Boolean insertNode(String cookie, String domain, String time) {
         String query = "";
         return true;
     }
 
-    public long getNode(String domain) {
+    public Long getNode(String domain) {
         String query = "";
-        return runQuery(query);
+        return 1l;
     }
     
-    public long getLastNode(String cookie) {
+    public Long getLastNode(String cookie) {
         return 1l;
     }
 
-    public long addRelation(long src, long dest, String cookie) {
+    public Long addRelation(long src, long dest, String cookie) {
         String query = "";
-        return runQuery(query);
+        return 1l;
     }
 
     
