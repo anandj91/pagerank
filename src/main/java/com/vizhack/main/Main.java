@@ -38,6 +38,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("Pass file name as argument");
+            System.exit(-1);
         }
         File a = new File(args[0]);
         createDomainNodes(a);
