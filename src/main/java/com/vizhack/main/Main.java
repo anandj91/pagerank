@@ -57,13 +57,13 @@ public class Main {
         String prevLine = br.readLine();
         String prevLineArray[] = prevLine.split(delim);
         String domPrev = getTopDomain(prevLineArray[3]);
-        String line = null, domain = null;
+        String line = null,dom = null;
         while ((line = br.readLine()) != null) {
             String[] lineArray = line.split(delim);
             if (prevLineArray[0].equals(lineArray[0])
                     && !lineArray[3].equals("unknown")
                     && !lineArray[3].equals("-")) {
-                String dom = getTopDomain(lineArray[3]);
+                dom = getTopDomain(lineArray[3]);
                 if (!domPrev.equals(dom)) {
                     db.addRelation(domPrev, dom, lineArray[0]);
                     if(lineArray[1].equals("true")){
@@ -79,6 +79,7 @@ public class Main {
                 for (int i = 0; i < prevLineArray.length; i++) {
                     prevLineArray[i] = lineArray[i];
                 }
+                domPrev = dom;
             }
         }
 
