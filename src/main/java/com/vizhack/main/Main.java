@@ -37,6 +37,7 @@ public class Main {
                     
                     if (isClick){
                         db.insertNode(advId);
+                        domainCacheList.add(advId);
                     }
                 }
             }
