@@ -32,11 +32,11 @@ public class Main {
             if (domain != "unknown" && domain != "-") {
                 domain = getTopDomain(domain);
                 if (!domainCacheList.contains(domain)) {
-                    db.insertNode(domain);
+                    db.insertNode(domain, "Domain");
                     domainCacheList.add(domain);
                     
                     if (isClick){
-                        db.insertNode(advId);
+                        db.insertNode(advId, "Adv");
                         domainCacheList.add(advId);
                     }
                 }
