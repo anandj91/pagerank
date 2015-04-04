@@ -36,7 +36,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        File a = new File("/home/anandj/b");
+        if (args.length != 1) {
+            System.err.println("Pass file name as argument");
+        }
+        File a = new File(args[0]);
         createDomainNodes(a);
         CreateRelations(a);
     }
