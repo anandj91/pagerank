@@ -3,6 +3,7 @@ package com.vizhack.main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -24,14 +25,19 @@ public class Main {
         while ((line = br.readLine()) != null) {
             String[] lineArray = line.split(delim);
             domain = lineArray[3];
-            domain = domain.replace("https://", "").replace("http://", "");
+            
+            boolean isClick = "true".equals(lineArray[1]);
+            String advId = lineArray[2];
 
             if (domain != "unknown" && domain != "-") {
-                domain = domain.contains("/") ? domain.substring(0,
-                        domain.indexOf("/")) : domain;
+                domain = getTopDomain(domain);
                 if (!domainCacheList.contains(domain)) {
                     db.insertNode(domain);
                     domainCacheList.add(domain);
+                    
+                    if (isClick){
+                        db.insertNode(advId);
+                    }
                 }
             }
         }
@@ -45,10 +51,11 @@ public class Main {
         }
         File a = new File(args[0]);
         createDomainNodes(a);
-        CreateRelations(a);
+        createRelations(a);
     }
 
     // cookie timestamp
+    @Deprecated
     private static void CreateRelations(File fin) throws IOException {
         FileInputStream fis = new FileInputStream(fin);
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
@@ -80,6 +87,42 @@ public class Main {
                     prevLineArray[i] = lineArray[i];
                 }
                 domPrev= dom;
+            }
+        }
+
+    }
+    
+    private static void createRelations(File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+        DBUtil db = new DBUtil();
+
+        String prevDomain = null;
+        String prevCookie = null;
+        String curDomain = null;
+        String curCookie = null;
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            String[] lineSplit = line.split(delim);
+
+            prevCookie = curCookie;
+            curCookie = lineSplit[0];
+
+            prevDomain = curDomain;
+            curDomain = getTopDomain(lineSplit[3]);
+
+            boolean isClick = "true".equals(lineSplit[1]);
+            String advId = lineSplit[2];
+
+            if (curCookie.equals(prevCookie)) {
+                if (!curDomain.equals(prevDomain)) {
+                    db.addRelation(prevDomain, curDomain, curCookie);
+                }
+            }
+            if (isClick) {
+                db.addRelation(curDomain, advId, curCookie);
             }
         }
 
