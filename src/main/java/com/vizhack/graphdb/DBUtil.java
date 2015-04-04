@@ -25,17 +25,14 @@ public class DBUtil {
                 .type(MediaType.APPLICATION_JSON).entity(payload)
                 .post(ClientResponse.class);
 
-        System.out
-                .println(String.format(
-                        "POST [%s] to [%s], status code [%d], returned data: "
-                                + System.getProperty("line.separator") + "%s",
-                        payload, TXN_URI, response.getStatus(),
-                        response.getEntity(String.class)));
-
         return response;
     }
 
     public Boolean insertNode(String domain) {
+        if (isNodeExist(domain)) {
+            return true;
+        }
+
         String query = String.format("CREATE (%s:Domain {domain:'%s'})",
                 domain, domain);
 
@@ -48,24 +45,36 @@ public class DBUtil {
         return false;
     }
 
-    public Long getNode(String domain) {
-        String query = "MATCH (n) WHERE n.domain='%s' RETURN n";
+    public Boolean isNodeExist(String domain) {
+        String query = String.format(
+                "MATCH (n) WHERE n.domain='%s' RETURN 'yes'", domain);
 
         ClientResponse response = runQuery(query);
         int status = response.getStatus();
 
         if (status >= 200 && status < 300) {
-            return null;
+            return response.getEntity(String.class).contains(
+                    "{\"row\":[\"yes\"]}");
         }
-        return null;
+
+        return false;
     }
 
     public Long getLastNode(String cookie) {
         return null;
     }
 
-    public Long addRelation(String src, String dest, String cookie) {
-        return null;
+    public Boolean addRelation(String src, String dest, String cookie) {
+        String query = "MATCH (u:Domain), (r:Domain) WHERE u.domain='%s' and r.domain='%s' CREATE (u)-[:VISITED]->(r)";
+
+        ClientResponse response = runQuery(query);
+        int status = response.getStatus();
+
+        if (status >= 200 && status < 300) {
+            return true;
+        }
+
+        return false;
     }
 
     public Boolean flushDB() {
@@ -85,8 +94,8 @@ public class DBUtil {
      */
     public static void main(String[] args) {
         DBUtil db = new DBUtil();
-        System.out.println(db.insertNode("testdomain"));
-//        db.flushDB();
+//        System.out.println(db.isNodeExist("test3"));
+         db.flushDB();
     }
 
 }
