@@ -19,7 +19,7 @@ public class Main {
 
         String line = null, domain = null;
         while ((line = br.readLine()) != null) {
-            String[] lineArray = line.split("\t");
+            String[] lineArray = line.split(",");
             domain = lineArray[3];
             domain = domain.replace("https://", "").replace("http://", "");
 
@@ -36,10 +36,9 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        File a = new File("/home/ubuntu/a");
+        File a = new File("/home/anandj/b");
         createDomainNodes(a);
         CreateRelations(a);
-
     }
 
     // cookie timestamp
@@ -49,28 +48,15 @@ public class Main {
 
         DBUtil db = new DBUtil();
         String prevLine = br.readLine();
-        String prevLineArray[] = prevLine.split("\t");
-        String domPrev = prevLineArray[3]
-                .replace("https://", "")
-                .replace("http://", "")
-                .substring(
-                        0,
-                        prevLineArray[3].indexOf("/") == -1 ? prevLineArray[3]
-                                .length() : prevLineArray[3].indexOf("/"));
-
+        String prevLineArray[] = prevLine.split(",");
+        String domPrev = getTopDomain(prevLineArray[3]);
         String line = null, domain = null;
         while ((line = br.readLine()) != null) {
-            String[] lineArray = line.split("\t");
+            String[] lineArray = line.split(",");
             if (prevLineArray[0].equals(lineArray[0])
                     && !lineArray[3].equals("unknown")
                     && !lineArray[3].equals("-")) {
-                String dom = lineArray[3]
-                        .replace("https://", "")
-                        .replace("http://", "")
-                        .substring(
-                                0,
-                                lineArray[3].indexOf("/") == -1 ? lineArray[3]
-                                        .length() : lineArray[3].indexOf("/"));
+                String dom = getTopDomain(lineArray[3]);
                 if (!domPrev.equals(dom)) {
                     db.addRelation(domPrev, dom, lineArray[0]);
                 }
@@ -81,6 +67,13 @@ public class Main {
             }
         }
 
+    }
+
+    private static String getTopDomain(String url) {
+        String temp = url.replace("https://", "").replace("http://", "");
+        String domPrev = temp.substring(0,
+                temp.indexOf("/") == -1 ? temp.length() : temp.indexOf("/"));
+        return domPrev;
     }
 
 }

@@ -29,13 +29,13 @@ public class DBUtil {
     }
 
     public Boolean insertNode(String domain) {
+        domain = escapeDomain(domain);
         if (isNodeExist(domain)) {
-            return true;
+            return null;
         }
 
         String query = String.format("CREATE (%s:Domain {domain:'%s'})",
                 domain, domain);
-
         ClientResponse response = runQuery(query);
         int status = response.getStatus();
 
@@ -65,8 +65,12 @@ public class DBUtil {
     }
 
     public Boolean addRelation(String src, String dest, String cookie) {
-        String query = "MATCH (u:Domain), (r:Domain) WHERE u.domain='%s' and r.domain='%s' CREATE (u)-[:VISITED]->(r)";
+        src = escapeDomain(src);
+        dest = escapeDomain(dest);
 
+        String query = String
+                .format("MATCH (u:Domain), (r:Domain) WHERE u.domain='%s' and r.domain='%s' CREATE (u)-[%s:VISITED {cookie:'%s'}]->(r)",
+                        src, dest, cookie, cookie);
         ClientResponse response = runQuery(query);
         int status = response.getStatus();
 
@@ -77,16 +81,16 @@ public class DBUtil {
         return false;
     }
 
-    public Boolean flushDB() {
-        String query = "MATCH (n) DELETE n";
+    public void flushDB() {
+        String query = "MATCH (n)-[r]->(m) DELETE n,r,m";
+        String query1 = "MATCH (n) DELETE n";
 
-        ClientResponse response = runQuery(query);
-        int status = response.getStatus();
+        runQuery(query);
+        runQuery(query1);
+    }
 
-        if (status >= 200 && status < 300) {
-            return true;
-        }
-        return false;
+    private String escapeDomain(String domain) {
+        return domain.replaceAll("\\.", "\\$");
     }
 
     /**
@@ -94,8 +98,8 @@ public class DBUtil {
      */
     public static void main(String[] args) {
         DBUtil db = new DBUtil();
-//        System.out.println(db.isNodeExist("test3"));
-         db.flushDB();
+        // System.out.println(db.isNodeExist("test3"));
+        db.flushDB();
     }
 
 }
