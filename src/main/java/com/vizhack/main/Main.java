@@ -27,7 +27,7 @@ public class Main {
             domain = lineArray[3];
             
             boolean isClick = "true".equals(lineArray[1]);
-            String advId = lineArray[2];
+            String advId = "VIZVRM" + lineArray[2];
 
             if (domain != "unknown" && domain != "-") {
                 domain = getTopDomain(domain);
@@ -115,7 +115,7 @@ public class Main {
             curDomain = getTopDomain(lineSplit[3]);
 
             boolean isClick = "true".equals(lineSplit[1]);
-            String advId = lineSplit[2];
+            String advId = "VIZVRM" + lineSplit[2];
 
             if (curCookie.equals(prevCookie)) {
                 if (!curDomain.equals(prevDomain)) {
