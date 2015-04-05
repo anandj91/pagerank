@@ -129,6 +129,7 @@ public class Main {
 
     private static String getTopDomain(String url) {
         String temp = url.replace("https://", "").replace("http://", "");
+        temp = temp.replaceFirst("www\\.", "");
         String domPrev = temp.substring(0,
                 temp.indexOf("/") == -1 ? temp.length() : temp.indexOf("/"));
         return domPrev;
