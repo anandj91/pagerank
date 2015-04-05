@@ -28,14 +28,14 @@ public class DBUtil {
         return response;
     }
 
-    public Boolean insertNode(String domain, String type) {
+    public Boolean insertNode(String domain) {
         domain = escapeDomain(domain);
         if (isNodeExist(domain)) {
             return null;
         }
 
-        String query = String.format("CREATE (%s:%s {domain:'%s'})", domain,
-                type, domain);
+        String query = String.format("CREATE (%s:Domain {domain:'%s'})",
+                domain, domain);
         ClientResponse response = runQuery(query);
         int status = response.getStatus();
 
